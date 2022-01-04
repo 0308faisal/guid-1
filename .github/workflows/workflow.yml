@@ -23,8 +23,9 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
           #Now we have got the access of EC2 and we will start the deploy .
           cd /home/
-          git clone git@github.com:0308faisal/guid.git
-          cd guid
+          rm -rf faisal
+          #git clone git@github.com:0308faisal/guid.git
+          #cd guid
           #git fetch --all &&
           #git checkout master &&
           #git pull origin dev &&
