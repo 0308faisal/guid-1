@@ -6,8 +6,8 @@ define('GUIDEDOC_EMAIL', getenv("GUIDEDOC_EMAIL"));
 define('MAILGUN_URL', getenv("MAILGUN_URL"));
 define('MAILGUN_API', getenv("MAILGUN_API"));
 define('FILESTORAGE', 'db'); //db,file
-define('SITE_URL', 'https://' . $_SERVER['SERVER_NAME'] . '/rest_v2/');
-define('BASE_URL', 'https://' . $_SERVER['SERVER_NAME'] . '/');
+define('SITE_URL', 'http://' . $_SERVER['SERVER_NAME'] . '/rest_v2/');
+define('BASE_URL', 'http://' . $_SERVER['SERVER_NAME'] . '/');
 define('DATA_DIR', '');
 define('HOSTS', array(
 	'guidedoc.test' => array(
