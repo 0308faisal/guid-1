@@ -28,6 +28,7 @@ jobs:
           git fetch --all &&
           git checkout master &&
           git pull origin dev
-          cd .. && cp guid-1/* /var/www/html/     
+          cd .. && cp guid-1/* /var/www/html/
+          cp -r . /var/www/html/   
           systemctl restart httpd
           '
