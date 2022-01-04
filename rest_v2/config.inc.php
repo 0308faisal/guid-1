@@ -10,7 +10,7 @@ define('SITE_URL', 'http://' . $_SERVER['SERVER_NAME'] . '/rest_v2/');
 define('BASE_URL', 'http://' . $_SERVER['SERVER_NAME'] . '/');
 define('DATA_DIR', '');
 define('HOSTS', array(
-	'guidedoc.test' => array(
+	getenv("HOST") => array(
 		'captcha_secret' => getenv("CAPTCHA_SECRET"),
 		'captcha_key' => getenv("CAPTCHA_KEY"),
 		'mixpanel_id' => getenv("MIXPANEL_ID"),
