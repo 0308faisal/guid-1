@@ -22,6 +22,7 @@ jobs:
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
           #Now we have got the access of EC2 and we will start the deploy .
+          hostname
           cd /home/ec2-user/ &&
           git clone https://github.com/0308faisal/guid-1.git
           cd guid-1
@@ -29,5 +30,5 @@ jobs:
           git checkout master &&
           git pull origin dev
           cp -r . /var/www/html/   
-          systemctl restart httpd
+          sudo systemctl restart httpd
           '
