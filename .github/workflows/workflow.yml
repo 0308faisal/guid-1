@@ -1,0 +1,34 @@
+name: CI/CD guiddoc app
+
+on:
+  pull_request:
+    branches: [ dev ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 
+      - name: Deploy in EC2
+        env:
+            PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+            HOSTNAME: ${{ secrets.HOSTNAME  }}
+            USER_NAME: ${{ secrets.USER_NAME  }}
+            
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          #Now we have got the access of EC2 and we will start the deploy '
+          cd /home/
+          sudo mkdir faisal
+          # git clone git@github.com:0308faisal/guid.git
+          # cd guid
+          # git fetch --all &&
+          # git checkout master &&
+          # git pull origin dev &&
+          # cd .. && cp guid/* /var/www/html/     
+          # systemctl stop httpd
+          '

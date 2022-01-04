@@ -1,0 +1,139 @@
+<?php
+
+class Auth extends API
+{
+	
+	public function __construct($request = null)
+	{
+		if (isset($request)) {
+			parent::__construct($request);
+		}
+	}
+
+	/**
+     * @OA\Post(
+     *     path="/rest_v2/auth/authenticate",
+     *     tags={"Login"},
+     *     summary="Logs user into system",
+	 * 		@OA\RequestBody(
+	 * 		required=true,
+	*          @OA\MediaType(
+	*              mediaType="multipart/form-data",
+	*              @OA\Schema(
+	*                  @OA\Property(
+	*                      property="email",
+	*                      type="string",
+	*                  ),
+	*                  @OA\Property(
+	*                      property="password",
+	*                      type="string"
+	*                  )
+	*              )
+	*          )
+	*      ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid username/password supplied"
+     *     )
+	 * )
+	 * 
+     *
+	*/
+	protected function authenticate()
+	{
+	
+		if (!isset($this->request['email']) || $this->request['email'] == '' || !isset($this->request['password']) || $this->request['password'] == '') {
+				
+			if (!isset($this->request['ip'])) {
+				$ip = $this->_getip();
+			} else {
+					$ip = $this->request['ip'];
+				}
+				$sql = "login_ip='" . $ip . "'";
+				$iplogin = true;
+		} else {
+			$sql = "`email`='".$this->request['email']."'";	
+
+			$iplogin = false;
+		}
+		$userquery = "SELECT `id`, `password`,`activated`,`admin` FROM `Guidedoc`.`members` WHERE ".$sql;
+		$result = $this->Db->execute($userquery);
+		
+		if ($result !== false && $this->Db->count() == 1) {
+			if ($iplogin ||  password_verify($this->request['password'], $result[0]['password'])) {
+				if ($result[0]['activated'] ==1) {
+					$user = new User();
+					$data['iat'] = time();
+					$data['exp'] = time() + 86400;
+					$data['user'] = $result[0]['id'];
+					$data['iplogin'] = $iplogin;
+					$token = JWT::encode($data, JWTSECRET);
+					return json_encode(array(
+						'token' =>$token,
+						'status' => 'success',
+						'response' => 'Login Successful',
+					));
+				} else {
+					throw new Exception('Account not activated');
+				}
+			} else {
+				throw new Exception('User information incorrect.  Please check you details and try again.');
+			}
+		} else {
+			throw new Exception('User not found');
+		}
+	}
+
+	/**
+	 * @internal
+	 */
+	static function generatePassword()
+	{
+		$makepass = '';
+		$chars = array(
+			'a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E',
+			'f', 'F', 'g', 'G', 'h', 'H', 'i', 'I', 'j', 'J',
+			'k', 'K', 'l', 'L', 'm', 'M', 'n', 'N', 'o', 'O',
+			'p', 'P', 'q', 'Q', 'r', 'R', 's', 'S', 't', 'T',
+			'u', 'U', 'v', 'V', 'w', 'W', 'x', 'X', 'y', 'Y',
+			'z', 'Z', '1', '2', '3', '4', '5', '6', '7', '8',
+			'9', '0',
+		);
+		$max_elements = count($chars) - 1;
+		srand((float) microtime() * 1000000);
+		$newpw = $chars[rand(0, $max_elements)];
+		$newpw .= $chars[rand(0, $max_elements)];
+		$newpw .= $chars[rand(0, $max_elements)];
+		$newpw .= $chars[rand(0, $max_elements)];
+		$newpw .= $chars[rand(0, $max_elements)];
+		$newpw .= $chars[rand(0, $max_elements)];
+		$newpw .= $chars[rand(0, $max_elements)];
+		$newpw .= $chars[rand(0, $max_elements)];
+		$newpw .= $chars[rand(0, $max_elements)];
+		$newpw .= $chars[rand(0, $max_elements)];
+		$newpw .= $chars[rand(0, $max_elements)];
+
+		$makepass = $newpw;
+
+		return $makepass;
+	}
+
+	/**
+	 * @internal
+	 */
+	static function validatetoken()
+	{
+		$headers = apache_request_headers();
+		if (isset($headers['authorization']) || isset($headers['Authorization'])) {
+			$auth = isset($headers['Authorization']) ? $headers['Authorization'] : $headers['authorization'];
+			$data = JWT::decode($auth, JWTSECRET);
+			return $data;
+		} else {
+			return false;
+		}
+	}
+}

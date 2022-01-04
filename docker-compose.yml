@@ -1,0 +1,9 @@
+version: '3.0'
+services:
+  guide_doc:
+    container_name: guide_doc
+    build: .
+    ports:
+      - 80:80
+    volumes:
+      - .:/var/www/html/
