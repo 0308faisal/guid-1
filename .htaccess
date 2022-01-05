@@ -3,16 +3,16 @@ Options -Indexes
 php_flag  log_errors on
 <IfModule mod_rewrite.c>
 RewriteEngine On
-##RewriteCond %{HTTPS} off
-##RewriteCond %{HTTP:X-Forwarded-Proto} !https
-##RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule rest_v2/([a-z]+)/(.*)$ rest_v2/index.php?class=$1&request=$2 [QSA,NC,L]
 RewriteRule rest/(.*)$ rest/index.php?request=$1 [QSA,NC,L]
 
-SetEnv HOST 54.85.156.64
+SetEnv HOST guid.thdinfinity.com
 SetEnv DB_HOST 138.68.131.29
 SetEnv DB_PORT 25060
 SetEnv DB_USERNAME doadmin
