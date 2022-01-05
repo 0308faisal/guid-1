@@ -12,7 +12,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule rest_v2/([a-z]+)/(.*)$ rest_v2/index.php?class=$1&request=$2 [QSA,NC,L]
 RewriteRule rest/(.*)$ rest/index.php?request=$1 [QSA,NC,L]
 
-SetEnv HOST guid.thdinfinity.com
+SetEnv HOST guiddoc.thdinfinity.com
 SetEnv DB_HOST 138.68.131.29
 SetEnv DB_PORT 25060
 SetEnv DB_USERNAME doadmin
