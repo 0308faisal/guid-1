@@ -49,6 +49,7 @@ class Guideline extends API
      */
 	protected function getguide()
 	{
+		$error = new ErrorLogs();
 		if ($this->method == 'GET') {
 			if (isset($this->args[0]) && \is_numeric($this->args[0])) {
 				$user = User::getuser();
@@ -111,12 +112,13 @@ class Guideline extends API
 					throw new Exception('No guidelines found');
 				}
 
-				throw new Exception($guidelinequery);
+				//throw new Exception($guidelinequery);
+				$error->apiLogs('error', 'getguide api - '.$guidelinequery);
 			}
 
 			throw new Exception('Guideline ID required');
 		}
-
+		$error->apiLogs('error', 'getguide api - Only accepts GET requests');
 		throw new Exception('Only accepts GET requests');
 	}
 
@@ -125,6 +127,7 @@ class Guideline extends API
 	 */
 	protected function guidedelete()
 	{
+		$error = new ErrorLogs();
 		if ($this->method == 'GET') {
 			$user = User::getuser();
 			$userid = $user['id'];
@@ -180,14 +183,14 @@ class Guideline extends API
 
 					throw new Exception('Guideline not found');
 				}
-
-				throw new Exception('Database error when retrieving guideline');
+				$error->apiLogs('error', 'guidedelete api - database/ query error while deleting guideline.');
+				//throw new Exception('Database error when retrieving guideline');
 			}
 
 			throw new Exception('Invalid Guideline Id');
 		}
-
-		throw new Exception('Only accepts POST requests');
+		$error->apiLogs('error', 'guidedelete api - Only accepts GET request.');
+		throw new Exception('Only accepts GET requests');
 	}
 
 	/**
@@ -537,8 +540,9 @@ class Guideline extends API
 
 				throw new Exception('No guidelines found');
 			}
-
-			throw new Exception('Database error when retrieving networks' . $this->Db->getError());
+			$error = new ErrorLogs();
+			$error->apiLogs('error', 'getguides api - '.$this->Db->getError());
+			//throw new Exception('Database error when retrieving networks' . $this->Db->getError());
 		}
 
 		throw new Exception('Only accepts GET requests');
@@ -608,8 +612,9 @@ class Guideline extends API
 
 				throw new Exception('No guidelines found');
 			}
-
-			throw new Exception('Database error when retrieving guidelines - ' . $guidelinequery);
+			$error = new ErrorLogs();
+			$error->apiLogs('error', 'guidemanagementsummary api - Database error when retrieving guidelines - '.$guidelinequery);
+			//throw new Exception('Database error when retrieving guidelines - ' . $guidelinequery);
 		}
 
 		throw new Exception('Only accepts GET requests');
@@ -649,8 +654,10 @@ class Guideline extends API
 			}
 			return true;
 		}
-
-		return $this->Db->getError();
+		$error = new ErrorLogs();
+		$error->apiLogs('error', 'logguide - '.$this->Db->getError());
+		//return $this->Db->getError();
+		return 'Unable to log guide.';
 	}
 
 	/**
@@ -758,6 +765,8 @@ class Guideline extends API
 					}
 					Log::logcomment($guide['id'], $user['id'], '<< Guideline copied/linked to your network >>');
 				} else {
+					$error = new ErrorLogs();
+					$error->apiLogs('error', 'cloneall guidelines - '.$this->Db->getError());
 					throw new Exception('Problem cloning guideline');
 				}
 			}
@@ -822,7 +831,8 @@ class Guideline extends API
 					'id' => $guide['id'],
 				]);
 			}
-
+			$error = new ErrorLogs();
+			$error->apiLogs('error', 'cloneguide - '.$this->Db->getError());
 			throw new Exception('Problem cloning guideline');
 		}
 	}
@@ -914,7 +924,8 @@ class Guideline extends API
 
 					throw new Exception('Guideline was already adopted');
 				}
-
+				$error = new ErrorLogs();
+				$error->apiLogs('error', 'adopt api - '.$this->Db->getError());
 				throw new Exception('Database error when retrieving adoptions');
 			}
 		} else {
@@ -962,7 +973,8 @@ class Guideline extends API
 
 					throw new Exception('Guideline not found');
 				}
-
+				$error = new ErrorLogs();
+				$error->apiLogs('error', 'unadopt - '.$this->Db->getError());
 				throw new Exception('Database error when retrieving user');
 			}
 

@@ -94,7 +94,8 @@ class User extends API
                 'profileaccess' => $userresult[0]['profileaccess']
             ];
         }
-
+        $error = new ErrorLogs();
+        $error->apiLogs('error', 'getuser - '.$this->Db->getError());
         return false;
     }
 
@@ -110,6 +111,8 @@ class User extends API
                     'response' => 'Member deleted successfully',
                 ]);
             }
+            $error = new ErrorLogs();
+            $error->apiLogs('error', 'deleteuser - '.$this->Db->getError());
         }
     }
 
@@ -145,8 +148,9 @@ class User extends API
 
                 throw new Exception('Wrong network count for query');
             }
-
-            throw new Exception('Database error when retrieving members ' . $memberquery);
+            $error = new ErrorLogs();
+            $error->apiLogs('error', 'userlist - '.$this->Db->getError());
+            throw new Exception('Database error when retrieving members');
         }
 
         throw new Exception('Only accepts GET requests');
@@ -178,8 +182,9 @@ class User extends API
 
                 throw new Exception('Wrong network count for query');
             }
-
-            throw new Exception('Database error when retrieving members ' . $memberquery);
+            $error = new ErrorLogs();
+            $error->apiLogs('error', 'approvallist - '.$this->Db->getError());
+            throw new Exception('Database error when retrieving members');
         }
 
         throw new Exception('Only accepts GET requests');
@@ -219,6 +224,8 @@ class User extends API
                     ]);
                 }
             } else {
+                $error = new ErrorLogs();
+                $error->apiLogs('error', 'updatesignup - '.$this->Db->getError());
                 throw new Exception('Member signup not found');
             }
         } else {
@@ -315,7 +322,8 @@ class User extends API
 
                 throw new Exception('User not updated ');
             }
-
+            $error = new ErrorLogs();
+            $error->apiLogs('error', 'updatestatus api - '.$this->Db->getError());
             throw new Exception('Database error when retrieving user');
         }
 
@@ -349,7 +357,8 @@ class User extends API
 
                     throw new Exception('Password change request expired.');
                 }
-
+                $error = new ErrorLogs();
+                $error->apiLogs('error', 'validatepassword - '.$this->Db->getError());
                 throw new Exception('Database error when retrieving password change request ');
             }
 
@@ -492,7 +501,8 @@ class User extends API
 
                     throw new Exception('Error registering user');
                 }
-
+                $error = new ErrorLogs();
+                $error->apiLogs('error', 'register api - '.$this->Db->getError());
                 throw new Exception('Database error when registering user');
             }
 
@@ -563,7 +573,8 @@ class User extends API
 
                     throw new Exception('Error notifying user');
                 }
-
+                $error = new ErrorLogs();
+                $error->apiLogs('error', 'resetpassword - '.$this->Db->getError());
                 throw new Exception('Database error when creating activation code');
             }
 
@@ -622,7 +633,8 @@ class User extends API
 
                     throw new Exception('Activation link is no longer valid');
                 }
-
+                $error = new ErrorLogs();
+                $error->apiLogs('error', 'validateemail - '.$this->Db->getError());
                 throw new Exception('Database error when retrieving invite ');
             }
 
@@ -668,7 +680,8 @@ class User extends API
 
                     throw new Exception('Password change request not found');
                 }
-
+                $error = new ErrorLogs();
+                $error->apiLogs('error', 'changepassword - '.$this->Db->getError());
                 throw new Exception('Database error when retrieving password change request ');
             }
 
@@ -696,7 +709,9 @@ class User extends API
             $profileresult = $this->Db->execute($profilequery);
 
             if ($profileresult == false) {
-                throw new Exception('Error updating profile' . $profilequery);
+                $error = new ErrorLogs();
+                $error->apiLogs('error', 'memberprofile - '.$this->Db->getError());
+                throw new Exception('Error updating profile');
             }
 
             return \json_encode([
@@ -745,7 +760,8 @@ class User extends API
 
                 throw new Exception('Invalid user');
             }
-
+            $error = new ErrorLogs();
+            $error->apiLogs('error', 'memberpassword - '.$this->Db->getError());
             throw new Exception('Database error when retrieving user');
         }
 
@@ -797,7 +813,8 @@ class User extends API
 
             throw new Exception('Error notifying user');
         }
-
-        throw new Exception('Database error when creating activation code - ' . $this->Db->getError());
+        $error = new ErrorLogs();
+        $error->apiLogs('error', 'generateuseractivationcode - '.$this->Db->getError());
+        throw new Exception('Database error when creating activation code');
     }
 }

@@ -68,7 +68,8 @@ class Network extends API
 
             return false;
         }
-
+        $error = new ErrorLogs();
+		$error->apiLogs('error', 'getnetworks - '.$this->Db->getError());
         throw new Exception('Database error when retrieving networks');
     }
 
@@ -88,7 +89,8 @@ class Network extends API
                     return \json_encode(['status' => 'success',
                         'response' => 'Network status updated', ]);
                 }
-
+                $error = new ErrorLogs();
+				$error->apiLogs('error', 'approvenetwork - '.$this->Db->getError());
                 throw new Exception('Database error when updating network status ');
             }
 
@@ -170,10 +172,11 @@ class Network extends API
                             'response' => 'Network loaded successfully', ]);
                     }
 
-                    throw new Exception('Wrong network count for query' . $networkquery);
+                    throw new Exception('Wrong network count for query');
                 }
-
-                throw new Exception('Database error when retrieving networks' . $networkquery);
+                $error = new ErrorLogs();
+				$error->apiLogs('error', 'getnetwork - '.$this->Db->getError());
+                throw new Exception('Database error when retrieving networks');
             }
 
             throw new Exception('Network ID required');
@@ -244,11 +247,12 @@ class Network extends API
                     'status' => 'success',
                     'response' => 'Network saved successfully', ]);
             }
-
+            $error = new ErrorLogs();
+			$error->apiLogs('error', 'networkcreate - '.$this->Db->getError());
             throw new Exception('Database error when saving network ' . $this->Db->getError());
         }
 
-        throw new Exception('Only accepts GET requests');
+        throw new Exception('Only accepts POST requests');
     }
 
     /**
@@ -256,6 +260,7 @@ class Network extends API
      */
     protected function networkedit()
     {
+        $error = new ErrorLogs();
         if ($this->method == 'POST') {
             $user = User::getuser();
             $userid = $user['id'];
@@ -328,14 +333,15 @@ class Network extends API
                             'status' => 'success',
                             'response' => 'Network saved successfully', ]);
                     }
-
-                    throw new Exception('Database error when saving network ' . $this->Db->getError());
+                    $error->apiLogs('error', 'networkedit update query - '.$this->Db->getError());
+                    throw new Exception('Database error when saving network');
                 }
             } else {
-                throw new Exception('Database error when retrieving network ');
+				$error->apiLogs('error', 'networkedit retrieve - '.$this->Db->getError());
+                throw new Exception('Database error when retrieving network');
             }
         } else {
-            throw new Exception('Only accepts GET requests');
+            throw new Exception('Only accepts POST requests');
         }
     }
 
@@ -369,8 +375,9 @@ class Network extends API
 
                 throw new Exception('Network not found');
             }
-
-            throw new Exception('Database error when retrieving networks ');
+            $error = new ErrorLogs();
+            $error->apiLogs('error', 'networkaccesslist - '.$this->Db->getError());
+            throw new Exception('Database error when retrieving networks');
         }
 
         throw new Exception('Only accepts GET requests');
@@ -397,7 +404,9 @@ class Network extends API
                         'response' => 'Networks loaded successfully ', ]);
                 }
             } else {
-                throw new Exception('Database error when retrieving networks ' . $this->Db->getError());
+                $error = new ErrorLogs();
+                $error->apiLogs('error', 'networkapprovallist - '.$this->Db->getError());
+                throw new Exception('Database error when retrieving networks');
             }
         } else {
             throw new Exception('Only accepts GET requests');
@@ -428,7 +437,9 @@ class Network extends API
                         'response' => 'Networks loaded successfully ', ]);
                 }
             } else {
-                throw new Exception('Database error when retrieving networks ' . $this->Db->getError());
+                $error = new ErrorLogs();
+                $error->apiLogs('error', 'networkrequestlist - '.$this->Db->getError());
+                throw new Exception('Database error when retrieving networks');
             }
         } else {
             throw new Exception('Only accepts GET requests');
@@ -462,8 +473,9 @@ class Network extends API
 
                 throw new Exception('Wrong network count for query');
             }
-
-            throw new Exception('Database error when retrieving members ');
+            $error = new ErrorLogs();
+            $error->apiLogs('error', 'memberactivationlist - '.$this->Db->getError());
+            throw new Exception('Database error when retrieving members');
         }
 
         throw new Exception('Only accepts GET requests');
@@ -492,7 +504,8 @@ class Network extends API
 
                     throw new Exception('No invites found');
                 }
-
+                $error = new ErrorLogs();
+                $error->apiLogs('error', 'networkinvites - '.$this->Db->getError());
                 throw new Exception('Database error when retrieving network invites ');
             }
 
@@ -575,7 +588,8 @@ class Network extends API
 
                     throw new Exception('Wrong network count for query');
                 }
-
+                $error = new ErrorLogs();
+                $error->apiLogs('error', 'validateinvite - '.$this->Db->getError());
                 throw new Exception('Database error when retrieving invite ');
             }
 
@@ -642,7 +656,8 @@ class Network extends API
                         'status' => 'success',
                         'response' => 'Network request successfully sent', ]);
                 }
-
+                $error = new ErrorLogs();
+                $error->apiLogs('error', 'networkjoin - '.$this->Db->getError());
                 throw new Exception('Error joining network');
             }
 
@@ -692,7 +707,8 @@ class Network extends API
                         'status' => 'success',
                         'response' => 'Network successfully removed', ]);
                 }
-
+                $error = new ErrorLogs();
+                $error->apiLogs('error', 'networkleave - '.$this->Db->getError());
                 throw new Exception('Error leaving network');
             }
 
@@ -725,7 +741,8 @@ class Network extends API
                 return \json_encode(['status' => 'success',
                     'response' => 'Network status updated', ]);
             }
-
+            $error = new ErrorLogs();
+            $error->apiLogs('error', 'updateneworkaccess - '.$this->Db->getError());
             throw new Exception('Database error when updating network status');
         }
 
