@@ -60,12 +60,14 @@ class Auth extends API
 
 			$iplogin = false;
 		}
-		$userquery = "SELECT `id`, `password`,`activated`,`admin` FROM `Guidedoc`.`members` WHERE ".$sql;
+		$userquery = "SELECT `id`, `fname`, `lname`, `password`,`activated`,`admin` FROM `Guidedoc`.`members` WHERE ".$sql;
 		$result = $this->Db->execute($userquery);
 		
 		if ($result !== false && $this->Db->count() == 1) {
 			if ($iplogin ||  password_verify($this->request['password'], $result[0]['password'])) {
 				if ($result[0]['activated'] ==1) {
+					$error = new ErrorLogs();
+					$error->apiLogs('info', $result[0]['fname'].' '.$result[0]['lname'].' logged in at '.date('m/d/Y H:i:s'));
 					$user = new User();
 					$data['iat'] = time();
 					$data['exp'] = time() + 86400;
